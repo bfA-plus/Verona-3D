@@ -29,6 +29,10 @@
         light.position.set(1, 1, 1).normalize();
         scene.add(light);
 
+        // Aggiungi una luce ambientale
+        const ambientLight = new THREE.AmbientLight(0xffffff, 0.5); // Colore bianco, intensità 0.5
+        scene.add(ambientLight);
+        
         // Carica il file GLB
         const loader = new THREE.GLTFLoader();
         loader.load('Verona.glb', function (gltf) {
