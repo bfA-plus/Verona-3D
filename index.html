@@ -32,16 +32,26 @@
         // Aggiungi una luce ambientale
         const ambientLight = new THREE.AmbientLight(0xffffff, 0.5); // Colore bianco, intensità 0.5
         scene.add(ambientLight);
-        
-        // Carica il file GLB
-        const loader = new THREE.GLTFLoader();
-        loader.load('https://cors-anywhere.herokuapp.com/https://drive.google.com/uc?export=download&id=1uemGMENg6bUuIyTssRMLNjFA0jqVqBAi', function (gltf) {
-            scene.add(gltf.scene);
-            camera.position.z = 5; // Posiziona la camera
-            animate(); // Inizia l'animazione
-        }, undefined, function (error) {
-            console.error(error);
-        });
+
+         // Usa fetch con no-cors per caricare il file GLB
+        fetch('https://drive.google.com/uc?export=download&id=1uemGMENg6bUuIyTssRMLNjFA0jqVqBAi', { mode: 'no-cors' })
+            .then(response => {
+                return response.blob();
+            })
+            .then(blob => {
+                const url = URL.createObjectURL(blob);
+                const loader = new THREE.GLTFLoader();
+                loader.load(url, function (gltf) {
+                    scene.add(gltf.scene);
+                    camera.position.z = 5; // Posiziona la camera
+                    animate(); // Inizia l'animazione
+                }, undefined, function (error) {
+                    console.error('Errore durante il caricamento:', error);
+                });
+            })
+            .catch(error => {
+                console.error('Errore nel fetch:', error);
+            });
 
         // Funzione di animazione
         function animate() {
